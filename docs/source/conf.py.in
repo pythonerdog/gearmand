@@ -95,6 +95,8 @@ pygments_style = 'colorful'
 # A list of ignored prefixes for module index sorting.
 #modindex_common_prefix = []
 
+# Added so that Sphinx's C domain will treat 'bool' as a type name.
+c_extra_keywords = []
 
 # -- Options for HTML output ---------------------------------------------------
 
