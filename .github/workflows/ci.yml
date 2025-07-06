@@ -5,6 +5,9 @@ on:
     branches: [ master ]
   pull_request:
     branches: [ master ]
+  workflow_dispatch:
+  schedule:
+    - cron: '0 7 * * 6'  # Every Saturday at 7am
 
 jobs:
   build:
@@ -23,17 +26,19 @@ jobs:
 #           - {name: 'ubuntu-18.04 gcc-6', os: ubuntu-latest, container: 'ubuntu:18.04', cc: 'gcc-6', cxx: 'g++-6', tag: '6'}
 #           - {name: 'ubuntu-18.04 gcc-7', os: ubuntu-latest, container: 'ubuntu:18.04', cc: 'gcc-7', cxx: 'g++-7', tag: '7'}
 #           - {name: 'ubuntu-18.04 gcc-8', os: ubuntu-latest, container: 'ubuntu:18.04', cc: 'gcc-8', cxx: 'g++-8', tag: '8'}
-          - {name: 'ubuntu-20.04 gcc-9', os: ubuntu-20.04, cc: 'gcc-9', cxx: 'g++-9', tag: '9'}
-          - {name: 'ubuntu-20.04 gcc-10', os: ubuntu-20.04, cc: 'gcc-10', cxx: 'g++-10', tag: '10'}
-          - {name: 'ubuntu-20.04 gcc-11', os: ubuntu-20.04, cc: 'gcc-11', cxx: 'g++-11', tag: '11', toolchain: 'ppa:ubuntu-toolchain-r/test'}
+          - {name: 'ubuntu-20.04 gcc-9',  os: ubuntu-latest, container: 'ubuntu:20.04', cc: 'gcc-9', cxx: 'g++-9', tag: '9'}
+          - {name: 'ubuntu-20.04 gcc-10', os: ubuntu-latest, container: 'ubuntu:20.04', cc: 'gcc-10', cxx: 'g++-10', tag: '10'}
+          - {name: 'ubuntu-20.04 gcc-11', os: ubuntu-latest, container: 'ubuntu:20.04', cc: 'gcc-11', cxx: 'g++-11', tag: '11', toolchain: 'ppa:ubuntu-toolchain-r/test'}
           - {name: 'ubuntu-22.04 gcc-12', os: ubuntu-22.04, cc: 'gcc-12', cxx: 'g++-12', tag: '12'}
           - {name: 'ubuntu-24.04 gcc-13', os: ubuntu-24.04, cc: 'gcc-13', cxx: 'g++-13', tag: '13'}
           - {name: 'ubuntu-24.04 gcc-14', os: ubuntu-24.04, cc: 'gcc-14', cxx: 'g++-14', tag: '14'}
-          - {name: 'ubuntu-25.04 gcc-15', os: ubuntu-24.04, container: 'ubuntu:25.04', cc: 'gcc-15', cxx: 'g++-15', tag: '15', toolchain: 'ppa:ubuntu-toolchain-r/test'}
+          - {name: 'ubuntu-25.04 gcc-15', os: ubuntu-latest, container: 'ubuntu:25.04', cc: 'gcc-15', cxx: 'g++-15', tag: '15', toolchain: 'ppa:ubuntu-toolchain-r/test'}
+          - {name: 'ubuntu-25.10 gcc-15', os: ubuntu-latest, container: 'ubuntu:25.04', cc: 'gcc-15', cxx: 'g++-15', tag: '15', toolchain: 'ppa:ubuntu-toolchain-r/test'}
           - {name: 'alpine-3.18 gcc-12', os: ubuntu-latest, container: 'alpine:3.18', cc: 'gcc', cxx: 'g++', tag: '12'}
           - {name: 'alpine-3.19 gcc-13', os: ubuntu-latest, container: 'alpine:3.19', cc: 'gcc', cxx: 'g++', tag: '13'}
           - {name: 'alpine-3.20 gcc-13', os: ubuntu-latest, container: 'alpine:3.20', cc: 'gcc', cxx: 'g++', tag: '13'}
           - {name: 'alpine-3.21 gcc-14', os: ubuntu-latest, container: 'alpine:3.21', cc: 'gcc', cxx: 'g++', tag: '14'}
+          - {name: 'alpine-3.22 gcc-14', os: ubuntu-latest, container: 'alpine:3.22', cc: 'gcc', cxx: 'g++', tag: '14'}
 
     env:
       CC: ${{ matrix.config.cc }}
