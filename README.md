@@ -143,7 +143,7 @@ third number in the version.
 - ```$ git tag -s $NEW_RELEASE_TAG # Type in release notes```
 - ```$ ./bootstrap.sh -a && ./configure # This is needed to make dist properly```
 - ```$ make dist # This creates the tarball```
-- ```$ cd .. && tar -zxvf $OLDPWD/gearmand-$NEW_RELEASE_TAG && cd gearmand-$NEW_RELEASE_TAG && ./configure && make test ## Just to be sure that the tarball actually builds.```
+- ```$ cd .. && tar -zxvf $OLDPWD/gearmand-$NEW_RELEASE_TAG.tar.gz && cd gearmand-$NEW_RELEASE_TAG && ./configure && make test ## Just to be sure that the tarball actually builds.```
 - ```$ gpg --sign --armor --detach gearmand-$NEW_RELEASE_TAG.tar.gz```
 - ## THIS IS THE POINT OF NO RETURN, TO ABORT git tag -d <new release tag> and start over ##
 - ```$ git push --tags # Uploads the release tag to GitHub```
