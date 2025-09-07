@@ -142,12 +142,13 @@ third number in the version.
 - Review changes merged since the last release with git log $LAST_RELEASE_TAG..
 - ```$ git tag -s $NEW_RELEASE_TAG # Type in release notes```
 - ```$ ./bootstrap.sh -a && ./configure # This is needed to make dist properly```
+- ```$ make -C docs man # This step may or may not be necessary```
 - ```$ make dist # This creates the tarball```
 - ```$ cd .. && tar -zxvf $OLDPWD/gearmand-$NEW_RELEASE_TAG.tar.gz && cd gearmand-$NEW_RELEASE_TAG && ./configure && make test ## Just to be sure that the tarball actually builds.```
 - ```$ gpg --sign --armor --detach gearmand-$NEW_RELEASE_TAG.tar.gz```
-- ## THIS IS THE POINT OF NO RETURN, TO ABORT git tag -d <new release tag> and start over ##
+- ## THIS IS THE POINT OF NO RETURN, TO ABORT: ```git tag -d <new release tag>``` and start over ##
 - ```$ git push --tags # Uploads the release tag to GitHub```
 - Visit https://github.com/gearman/gearmand/releases and you should see the new tag without details. Create a release using that tag.
-- Upload gearmand-$NEW_RELEASE_TAG.tar.gz and the .asc signature file to the release
-- Announce the release to the gearman Matrix channel and mailing list
+- Upload gearmand-$NEW_RELEASE_TAG.tar.gz and the .asc signature file to the release.
+- Announce the release to the gearman Matrix channel and mailing list.
 
