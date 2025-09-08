@@ -1,7 +1,7 @@
 gearmand
 ========
 
-[![Build Status](https://app.travis-ci.com/gearman/gearmand.svg?branch=master)](https://app.travis-ci.com/github/gearman/gearmand)
+[![Build Status](https://github.com/gearman/gearmand/actions/workflows/ci.yml/badge.svg)](https://github.com/gearman/gearmand/actions/workflows/ci.yml)
 
 The latest version of ```gearmand``` source code and versions 1.1.13 and later can be found at [GitHub Repository](https://github.com/gearman/gearmand). Older versions released before 1.1.13 can be found at [Launchpad Repository](https://launchpad.net/gearmand/).
 
@@ -136,8 +136,8 @@ When it's time to release the master branch, check the last release tag, and
 create a new one. Most releases are patch releases, and so should increment the
 third number in the version.
 
-- Checkout master
-- Ensure there are no changes staged or un-added. Anything not in git master will be removed by the next step!
+- Checkout the master branch of this repository.
+- Ensure there are no changes staged or un-added. Anything not committed to the master branch will be removed by the next step!
 - ```$ git clean -xdf # This will remove all generated files```
 - Review changes merged since the last release with ```git log $LAST_RELEASE_TAG..```
 - ```$ git tag -s $NEW_RELEASE_TAG # Type in release notes```
