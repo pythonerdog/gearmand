@@ -359,14 +359,34 @@ gearman_server_job_st * gearman_server_job_peek(gearman_server_con_st *server_co
 
 gearman_server_job_st *gearman_server_job_take(gearman_server_con_st *server_con)
 {
-  for (gearman_server_worker_st *server_worker= server_con->worker_list; server_worker; server_worker= server_worker->con_next)
+  /* Select jobs by global priority across all workers. This ensures a high
+     priority job on any worker is preferred to lower priority jobs on earlier
+     workers in the list. */
+  for (gearman_job_priority_t priority= GEARMAN_JOB_PRIORITY_HIGH;
+       priority != GEARMAN_JOB_PRIORITY_MAX;
+       priority= gearman_job_priority_t(int(priority) +1))
   {
-    if (server_worker->function and server_worker->function->job_count)
+    for (gearman_server_worker_st *server_worker= server_con->worker_list;
+         server_worker; server_worker= server_worker->con_next)
     {
+      if (server_worker->function == NULL || server_worker->function->job_count == 0)
+      {
+        continue;
+      }
+
+      /* Only consider workers that have jobs for this priority. */
+      if (server_worker->function->job_list[priority] == NULL)
+      {
+        continue;
+      }
+
       gearmand_log_debug(GEARMAN_DEFAULT_LOG_PARAM, "Jobs available for %.*s: %lu",
                          (int)server_worker->function->function_name_size, server_worker->function->function_name,
                          (unsigned long)(server_worker->function->job_count));
 
+      /* Preserve the original round-robin behavior: when we select a worker
+         to hand out a job, move it to the end of the connection's worker
+         list so subsequent selection is fair. */
       if (Server->flags.round_robin)
       {
         GEARMAND_LIST_DEL(server_con->worker, server_worker, con_)
@@ -378,29 +398,19 @@ gearman_server_job_st *gearman_server_job_take(gearman_server_con_st *server_con
         }
       }
 
-      gearman_job_priority_t priority;
-      for (priority= GEARMAN_JOB_PRIORITY_HIGH; priority < GEARMAN_JOB_PRIORITY_LOW;
-           priority= gearman_job_priority_t(int(priority) +1))
-      {
-        if (server_worker->function->job_list[priority])
-        {
-          break;
-        }
-      }
-
       gearman_server_job_st *server_job= server_worker->function->job_list[priority];
       gearman_server_job_st *previous_job= server_job;
-  
+
       int64_t current_time= (int64_t)time(NULL);
-  
+
       while (server_job and server_job->when != 0 and server_job->when > current_time)
       {
         previous_job= server_job;
-        server_job= server_job->function_next;  
+        server_job= server_job->function_next;
       }
-  
+
       if (server_job)
-      { 
+      {
         if (server_job->function->job_list[priority] == server_job)
         {
           // If it's the head of the list, advance it
@@ -411,7 +421,7 @@ gearman_server_job_st *gearman_server_job_take(gearman_server_con_st *server_con
           // Otherwise, just remove the item from the list
           previous_job->function_next= server_job->function_next;
         }
-        
+
         // If it's the tail of the list, move the tail back
         if (server_job->function->job_end[priority] == server_job)
         {
@@ -428,12 +438,12 @@ gearman_server_job_st *gearman_server_job_take(gearman_server_con_st *server_con
           gearman_server_job_free(server_job);
           return gearman_server_job_take(server_con);
         }
-        
+
         return server_job;
       }
     }
   }
-  
+
   return NULL;
 }
 
